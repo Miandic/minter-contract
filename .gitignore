@@ -1,11 +1,3 @@
 node_modules
-.env
-.wget-hsts
-bin
-test3
-tonwallets/wallets
-.nyc_output
-tonwallets
-lib/cmd_temp.ts
-dist
-*.tgz
+temp
+build
