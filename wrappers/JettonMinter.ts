@@ -1,9 +1,20 @@
-import { Address, beginCell, Cell, Contract, contractAddress, ContractProvider, Sender, SendMode } from 'ton-core';
+import { Address, beginCell, Cell, Contract, contractAddress, ContractProvider, Sender, SendMode, Slice } from 'ton-core';
 
-export type JettonMinterConfig = {};
+export type JettonMinterConfig = {
+    total_supply: bigint;
+    admin_address: Address;
+    content: Cell;
+    jetton_wallet_code: Cell;
+};
 
 export function jettonMinterConfigToCell(config: JettonMinterConfig): Cell {
-    return beginCell().endCell();
+    return beginCell()
+        .storeCoins(config.total_supply)
+        .storeAddress(config.admin_address)
+        .storeRef(config.content)
+        .storeRef(config.jetton_wallet_code)
+        .storeDict()
+        .endCell();
 }
 
 export class JettonMinter implements Contract {
@@ -25,5 +36,13 @@ export class JettonMinter implements Contract {
             sendMode: SendMode.PAY_GAS_SEPARATELY,
             body: beginCell().endCell(),
         });
+    }
+
+    async getWalletAddress(provider: ContractProvider, address: Address): Promise<Address> {
+        return (
+            await provider.get('get_wallet_address', [
+                { type: 'slice', cell: beginCell().storeAddress(address).endCell() },
+            ])
+        ).stack.readAddress();
     }
 }
