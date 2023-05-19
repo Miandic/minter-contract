@@ -1,10 +1,20 @@
 import { Address, beginCell, Cell, Contract, contractAddress, ContractProvider, Sender, SendMode } from 'ton-core';
 
-export type JettonWalletConfig = {};
+export type JettonWalletConfig = {
+    balance: bigint,
+    owner_address: bigint,
+    jetton_master_address: bigint,
+    jetton_wallet_code: Cell
+};
 
 export function jettonWalletConfigToCell(config: JettonWalletConfig): Cell {
     return beginCell().endCell();
 }
+
+export const constAmounts = {
+    min_tons_for_storage: 10000000,
+    gas_consumption: 10000000
+};
 
 export class JettonWallet implements Contract {
     constructor(readonly address: Address, readonly init?: { code: Cell; data: Cell }) {}
