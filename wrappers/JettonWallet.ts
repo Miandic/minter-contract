@@ -2,8 +2,8 @@ import { Address, beginCell, Cell, Contract, contractAddress, ContractProvider, 
 
 export type JettonWalletConfig = {
     balance: bigint,
-    owner_address: bigint,
-    jetton_master_address: bigint,
+    owner_address: Address,
+    jetton_master_address: Address,
     jetton_wallet_code: Cell
 };
 

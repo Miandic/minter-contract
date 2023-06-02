@@ -1,3 +1,4 @@
+import { Treasury } from '@ton-community/sandbox';
 import { Address, beginCell, Cell, Contract, contractAddress, ContractProvider, Sender, SendMode, Slice } from 'ton-core';
 
 export type JettonMinterConfig = {
@@ -18,6 +19,9 @@ export function jettonMinterConfigToCell(config: JettonMinterConfig): Cell {
 }
 
 export class JettonMinter implements Contract {
+    static getJettonData(arg0: Treasury) {
+        throw new Error('Method not implemented.');
+    }
     constructor(readonly address: Address, readonly init?: { code: Cell; data: Cell }) {}
 
     static createFromAddress(address: Address) {
@@ -36,6 +40,12 @@ export class JettonMinter implements Contract {
             sendMode: SendMode.PAY_GAS_SEPARATELY,
             body: beginCell().endCell(),
         });
+    }
+
+    async getJettonData(provider: ContractProvider) {
+        let data = (await (provider.get('get_jetton_data', []))).stack.readBuffer()
+        console.log(data)
+        return data
     }
 
     async getWalletAddress(provider: ContractProvider, address: Address): Promise<Address> {
